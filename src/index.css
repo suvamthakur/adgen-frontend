@@ -1,0 +1,111 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+@import "tailwindcss";
+
+:root {
+  --color-darkest: #1e2224;
+  --color-darker: #30383f;
+  --color-lighter: #3c799e;
+  --color-lightest: #ebf4fa;
+
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: var(--color-lighter);
+  text-decoration: inherit;
+}
+a:hover {
+  opacity: 0.9;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--color-darkest);
+  color: var(--color-lightest);
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--color-lighter);
+  color: var(--color-lightest);
+  cursor: pointer;
+  transition: all 0.25s;
+}
+button:hover {
+  opacity: 0.9;
+}
+button:focus,
+button:focus-visible {
+  outline: 2px solid var(--color-lightest);
+}
+
+/* Custom utility classes */
+.bg-darkest {
+  background-color: var(--color-darkest);
+}
+
+.bg-darker {
+  background-color: var(--color-darker);
+}
+
+.bg-lighter {
+  background-color: var(--color-lighter);
+}
+
+.bg-lightest {
+  background-color: var(--color-lightest);
+}
+
+.text-darkest {
+  color: var(--color-darkest);
+}
+
+.text-darker {
+  color: var(--color-darker);
+}
+
+.text-lighter {
+  color: var(--color-lighter);
+}
+
+.text-lightest {
+  color: var(--color-lightest);
+}
+
+.border-darkest {
+  border-color: var(--color-darkest);
+}
+
+.border-darker {
+  border-color: var(--color-darker);
+}
+
+.border-lighter {
+  border-color: var(--color-lighter);
+}
+
+.border-lightest {
+  border-color: var(--color-lightest);
+}
