@@ -11,7 +11,6 @@ const GenerateAd = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
 
-  // Fetch order details using the orderId from URL
   const {
     data: orderData,
     isLoading,
@@ -22,17 +21,10 @@ const GenerateAd = () => {
   const [generateAd, { isLoading: isGenerationLoading }] =
     useGenerateAdMutation();
 
-  // Handle finish button
-  const handleFinish = () => {
-    navigate("/previous-orders");
-  };
-
-  // Handle cancel button
   const handleCancel = () => {
     navigate("/dashboard");
   };
 
-  // Show error if order fetch fails
   useEffect(() => {
     if (isError) {
       toast.error(
@@ -115,7 +107,6 @@ const GenerateAd = () => {
   );
 };
 
-// Product Card Component
 const ProductCard = ({ product, orderId }) => {
   const [script, setScript] = useState(product.script);
   const [isEditing, setIsEditing] = useState(false);
@@ -138,7 +129,8 @@ const ProductCard = ({ product, orderId }) => {
       await editProduct({
         productId: product._id,
         script: script,
-      }).unwrap();
+      }).unwrap(); // Throws an error if the request fails
+      // Without unwrap, it would not throw an error and we wouldn't be able to catch it
 
       toast.success("Script updated successfully");
       setIsEditing(false);
@@ -154,7 +146,7 @@ const ProductCard = ({ product, orderId }) => {
       <img
         src={product.image}
         alt="Product"
-        className="w-full h-56 object-cover"
+        className="w-full h-56 object-contain"
       />
       <div className="p-4">
         {isEditing ? (

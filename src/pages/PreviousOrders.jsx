@@ -15,10 +15,8 @@ const PreviousOrders = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
 
-  // Fetch all orders
   const { data: orders, isLoading, isError, error } = useGetAllOrdersQuery();
 
-  // Show error if order fetch fails
   useEffect(() => {
     if (isError) {
       toast.error(
@@ -27,18 +25,15 @@ const PreviousOrders = () => {
     }
   }, [isError, error]);
 
-  // Handle sort change
   const handleSortChange = (e) => {
     setSortBy(e.target.value);
   };
 
-  // Handle status filter change
   const handleStatusFilterChange = (e) => {
     setStatusFilter(e.target.value);
   };
 
-  // Filter and sort orders based on selected options
-  const filteredAndSortedOrders = orders
+  const filteredOrders = orders
     ? [...orders]
         .filter((order) => {
           if (statusFilter === "all") return true;
@@ -50,35 +45,27 @@ const PreviousOrders = () => {
           } else if (sortBy === "oldest") {
             return new Date(a.createdAt) - new Date(b.createdAt);
           } else if (sortBy === "alphabetical") {
+            // Compares two strings (a.productName and b.productName) lexicographically [A-Z]
             return a.productName.localeCompare(b.productName);
           }
           return 0;
         })
     : [];
 
-  // Handle card click based on order status
   const handleCardClick = (order) => {
     if (order.orderStatus === "pending") {
-      // Navigate to edit page
       navigate(`/generate-ads/${order._id}`);
     } else if (order.orderStatus === "completed") {
-      // Show modal with order details
       setSelectedOrder(order);
       setShowModal(true);
     }
   };
 
-  // Handle retry for failed orders
-  const handleRetry = (e, orderId) => {
-    e.stopPropagation(); // Prevent card click event
-    // Here you would implement the retry logic
-    toast.success("Retry request sent. Your order will be processed soon.");
-  };
-
-  // Format date
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "short", day: "numeric" };
     return new Date(dateString).toLocaleDateString(undefined, options);
+
+    // undefined -> it uses user's default locale (eg: en-IN, en-US, etc.)
   };
 
   // Create SSE
@@ -170,25 +157,23 @@ const PreviousOrders = () => {
             Refresh
           </button>
         </div>
-      ) : filteredAndSortedOrders.length === 0 ? (
+      ) : filteredOrders.length === 0 ? (
         <div className="text-center py-8 text-lightest">
           <p>No orders found.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredAndSortedOrders.map((order) => (
+          {filteredOrders.map((order) => (
             <OrderCard
               key={order._id}
               order={order}
               onClick={() => handleCardClick(order)}
-              onRetry={(e) => handleRetry(e, order._id)}
               formatDate={formatDate}
             />
           ))}
         </div>
       )}
 
-      {/* Order Details Modal */}
       {showModal && selectedOrder && (
         <OrderDetailsModal
           order={selectedOrder}
@@ -203,7 +188,6 @@ const PreviousOrders = () => {
   );
 };
 
-// Order Card Component
 const OrderCard = ({ order, onClick, onRetry, formatDate }) => {
   const {
     _id,
@@ -215,6 +199,7 @@ const OrderCard = ({ order, onClick, onRetry, formatDate }) => {
     retryCount,
     retryLimit,
     images,
+    thumbnail_url,
   } = order;
 
   // Render card content based on order status
@@ -227,7 +212,7 @@ const OrderCard = ({ order, onClick, onRetry, formatDate }) => {
               <img
                 src={images[0]}
                 alt={productName}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
             </div>
           )}
@@ -280,13 +265,13 @@ const OrderCard = ({ order, onClick, onRetry, formatDate }) => {
       // Completed
       return (
         <div className="h-56 bg-darkest overflow-hidden">
-          <video
-            src={video_url}
-            className="w-full h-auto hover:controls"
-            onMouseEnter={(e) => (e.target.controls = true)}
-            onMouseLeave={(e) => (e.target.controls = false)}
-            autoPlay
-          />
+          {thumbnail_url && (
+            <img
+              src={thumbnail_url}
+              alt={productName}
+              className="w-full h-full object-contain"
+            />
+          )}
         </div>
       );
     }
@@ -322,7 +307,6 @@ const OrderCard = ({ order, onClick, onRetry, formatDate }) => {
   );
 };
 
-// Order Details Modal Component
 const OrderDetailsModal = ({ order, onClose, formatDate }) => {
   const {
     productName,
@@ -416,7 +400,7 @@ const OrderDetailsModal = ({ order, onClose, formatDate }) => {
                         <img
                           src={image}
                           alt={`Product ${index + 1}`}
-                          className="w-full h-24 object-cover"
+                          className="w-full h-36 object-contain"
                         />
                       </div>
                     ))}
@@ -430,7 +414,6 @@ const OrderDetailsModal = ({ order, onClose, formatDate }) => {
   );
 };
 
-// Helper function to get status badge class
 const getStatusBadgeClass = (status) => {
   switch (status) {
     case "pending":

@@ -5,7 +5,6 @@ const ProtectedRoute = ({ children }) => {
   const { user, isLoading } = useSelector((state) => state.auth);
   const location = useLocation();
 
-  // If still loading, show a loading spinner or placeholder
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -14,12 +13,10 @@ const ProtectedRoute = ({ children }) => {
     );
   }
 
-  // If not authenticated, redirect to login
   if (!user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // If authenticated, render the protected component
   return children;
 };
 

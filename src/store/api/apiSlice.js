@@ -5,8 +5,16 @@ export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
     baseUrl: baseUrl,
-    credentials: "include", // Important for cookie-based auth
+    credentials: "include",
   }),
-  tagTypes: ["User", "Order", "Product"],
+  tagTypes: [
+    "User",
+    "Order",
+    "Orders",
+    "Product",
+    "Products",
+    "Avatar",
+    "Voice",
+  ],
   endpoints: (builder) => ({}),
 });

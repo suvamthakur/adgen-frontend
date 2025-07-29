@@ -5,7 +5,7 @@ const AuthLayout = () => {
     <div className="min-h-screen flex items-center justify-center bg-darkest p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <p className="text-4xl font-bold text-lightest">
+          <p className="text-3xl font-bold text-lightest">
             AI Video Ads Generator
           </p>
         </div>

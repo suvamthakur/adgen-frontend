@@ -30,7 +30,6 @@ const Signup = () => {
   const [isVerifyOtp, setIsVerifyOtp] = useState(false);
 
   useEffect(() => {
-    // If user is already logged in, redirect to dashboard
     if (user) {
       navigate("/dashboard", { replace: true });
     }

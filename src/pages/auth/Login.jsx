@@ -22,8 +22,8 @@ const Login = () => {
 
   const [login, { isLoading }] = useLoginMutation();
 
+  // Navigate to dashboard if user is already logged in
   useEffect(() => {
-    // If user is already logged in, redirect to dashboard
     if (user) {
       navigate(from, { replace: true });
     }

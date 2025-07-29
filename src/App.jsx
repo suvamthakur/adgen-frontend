@@ -10,7 +10,6 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Fetch user details on app load
   const { isError } = useGetUserDetailsQuery();
 
   useEffect(() => {

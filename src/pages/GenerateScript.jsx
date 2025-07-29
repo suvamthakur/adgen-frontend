@@ -14,26 +14,22 @@ const GenerateScript = () => {
   const [selectedImages, setSelectedImages] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
 
-  // Form data for step 1
   const [formData, setFormData] = useState({
     productName: "",
     avatarId: "",
     voiceId: "",
     scriptLanguage: "English",
     description: "",
-    scriptLength: 150, // Default to short
-    emotion: "Friendly", // Default to friendly
+    scriptLength: 150,
+    emotion: "Friendly",
   });
 
-  // Fetch avatars and voices
   const { data: avatars, isLoading: avatarsLoading } = useGetAvatarsQuery();
   const { data: voices, isLoading: voicesLoading } = useGetVoicesQuery();
 
-  // Create order mutation
   const [createOrder, { isLoading: isCreatingOrder }] =
     useCreateOrderMutation();
 
-  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -42,7 +38,6 @@ const GenerateScript = () => {
     }));
   };
 
-  // Handle script length selection
   const handleScriptLengthChange = (e) => {
     const value = e.target.value;
     let scriptLength;
@@ -67,7 +62,6 @@ const GenerateScript = () => {
     }));
   };
 
-  // Handle image selection
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
 
@@ -78,12 +72,11 @@ const GenerateScript = () => {
 
     setSelectedImages(files);
 
-    // Create preview URLs
+    // Preview URLs
     const previews = files.map((file) => URL.createObjectURL(file));
     setPreviewImages(previews);
   };
 
-  // Handle avatar selection
   const handleAvatarSelect = (avatarId) => {
     setFormData((prev) => ({
       ...prev,
@@ -91,7 +84,6 @@ const GenerateScript = () => {
     }));
   };
 
-  // Handle voice selection
   const handleVoiceSelect = (voiceId) => {
     setFormData((prev) => ({
       ...prev,
@@ -99,11 +91,9 @@ const GenerateScript = () => {
     }));
   };
 
-  // Handle form submission for step 1
   const handleSubmitStep1 = async (e) => {
     e.preventDefault();
 
-    // Validate form
     if (!formData.productName.trim()) {
       toast.error("Please enter a product name");
       return;
@@ -132,7 +122,6 @@ const GenerateScript = () => {
     try {
       setIsSubmitting(true);
 
-      // Create FormData object for file upload
       const orderFormData = new FormData();
       orderFormData.append("productName", formData.productName);
       orderFormData.append("avatarId", formData.avatarId);
@@ -142,15 +131,12 @@ const GenerateScript = () => {
       orderFormData.append("scriptLength", formData.scriptLength);
       orderFormData.append("emotion", formData.emotion);
 
-      // Append images
       selectedImages.forEach((image) => {
         orderFormData.append("image", image);
       });
 
-      // Submit the form
       const response = await createOrder(orderFormData).unwrap();
 
-      // Navigate to the edit page with the order ID
       toast.success("Order created successfully!");
       navigate(`/generate-ads/${response.data._id}`);
     } catch (error) {
@@ -162,12 +148,11 @@ const GenerateScript = () => {
     }
   };
 
-  // Handle cancel button
   const handleCancel = () => {
     navigate("/dashboard");
   };
 
-  // Clean up preview URLs when component unmounts
+  // Clean up preview URLs
   useEffect(() => {
     return () => {
       previewImages.forEach((url) => URL.revokeObjectURL(url));
@@ -181,7 +166,6 @@ const GenerateScript = () => {
 
   return (
     <div className="container mx-auto px-4 py-4">
-      {/* Form for generating script */}
       <div className="bg-darker rounded-lg shadow-md p-6">
         <form onSubmit={handleSubmitStep1}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -202,7 +186,7 @@ const GenerateScript = () => {
               />
             </div>
 
-            {/* Voice Tone / Emotion */}
+            {/* Voice Tone */}
             <div className="col-span-1">
               <label htmlFor="emotion" className="block text-lightest mb-2">
                 Voice Tone *
@@ -283,7 +267,7 @@ const GenerateScript = () => {
               ></textarea>
             </div>
 
-            {/* Image Upload */}
+            {/* Image */}
             <div className="col-span-2">
               <label className="block text-lightest mb-2">
                 Upload Images * (Max 4)
@@ -304,7 +288,7 @@ const GenerateScript = () => {
                         <img
                           src={url}
                           alt={`Preview ${index + 1}`}
-                          className="w-full h-32 object-cover rounded-md"
+                          className="w-full h-58 object-contain rounded-md"
                         />
                       </div>
                     ))}
@@ -314,7 +298,7 @@ const GenerateScript = () => {
             </div>
           </div>
 
-          {/* Avatars Section */}
+          {/* Avatars */}
           <div className="mt-8">
             <h3 className="text-xl font-semibold mb-4">Select Avatar *</h3>
             {avatarsLoading ? (
@@ -336,7 +320,7 @@ const GenerateScript = () => {
                     <img
                       src={avatar.preview_image_url}
                       alt={avatar.avatar_name}
-                      className="w-full h-40 object-cover"
+                      className="w-full h-40 object-contain"
                     />
                     <div className="p-2 bg-darkest">
                       <p className="text-center font-medium">
@@ -352,7 +336,7 @@ const GenerateScript = () => {
             )}
           </div>
 
-          {/* Voices Section */}
+          {/* Voices */}
           <div className="mt-8">
             <h3 className="text-xl font-semibold mb-4">Select Voice *</h3>
             {voicesLoading ? (
@@ -390,7 +374,6 @@ const GenerateScript = () => {
             )}
           </div>
 
-          {/* Form Actions */}
           <div className="mt-8 flex justify-end space-x-4">
             <button
               type="button"
